@@ -1,0 +1,87 @@
+#
+# Copyright (C) 2023 The Android Open Source Project
+# Copyright (C) 2023 SebaUbuntu's TWRP device tree generator
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+$(call inherit-product, device/samsung/beyond0lte/device.mk)
+
+PRODUCT_DEVICE := beyond0lte
+PRODUCT_NAME := orangefox_beyond0lte
+PRODUCT_BRAND := samsung
+PRODUCT_MODEL := SM-G970F
+PRODUCT_MANUFACTURER := samsung
+
+PRODUCT_GMS_CLIENTID_BASE := android-samsung
+
+PRODUCT_BUILD_PROP_OVERRIDES += \
+    TARGET_DEVICE=beyond0lte \
+    PRODUCT_NAME=beyond0lte \
+    PRIVATE_BUILD_DESC="beyond0lte-user 12 SP1A.210812.016 G970FXXUHGVK6 release-keys" \
+    BUILD_FINGERPRINT="samsung/beyond0lteeea/beyond0lte:12/SP1A.210812.016/G970FXXUHGVK6:user/release-keys"
+
+# Recovery
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+TARGET_USERIMAGES_USE_EXT4 := true
+BOARD_HAS_LARGE_FILESYSTEM := true
+BOARD_SUPPRESS_SECURE_ERASE := true
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
+
+# Partition information
+BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728 # 128MB
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 134217728 # 128MB
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4294967296 # 4GB
+BOARD_VENDORIMAGE_PARTITION_SIZE := 1610612736 # 1.5GB
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 57671680000 # ~53GB
+
+# Kernel
+BOARD_KERNEL_BASE := 0x10000000
+BOARD_KERNEL_PAGESIZE := 4096
+BOARD_RAMDISK_OFFSET := 0x01000000
+BOARD_KERNEL_TAGS_OFFSET := 0x00000100
+BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+BOARD_KERNEL_IMAGE_NAME := Image.gz
+TARGET_KERNEL_SOURCE := kernel/samsung/beyond0lte
+TARGET_KERNEL_CONFIG := beyond0lte_defconfig
+
+# Device-specific settings
+TARGET_BOARD_PLATFORM := exynos9820
+TARGET_BOARD_PLATFORM_GPU := mali-g76
+BOARD_USES_VENDORIMAGE := true
+BOARD_VENDOR_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/vendor
+BOARD_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/recovery
+BOARD_SEPOLICY_DIRS += device/samsung/beyond0lte/sepolicy/common
+BOARD_SEPOLICY_DIRS += device/samsung/beyond0lte/sepolicy/$(TARGET_BOARD_PLATFORM)
+BOARD_AVB_ENABLE := true
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 2
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
+BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA2048
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
+
+# TWRP specific build flags
+TW_THEME := portrait_hdpi
+TW_EXTRA_LANGUAGES := true
+TW_SCREEN_BLANK_ON_BOOT := true
+TW_INPUT_BLACKLIST := "hbtp_vm"
+TW_USE_TOOLBOX := true
+TW_INCLUDE_CRYPTO := true
+TW_INCLUDE_NTFS_3G := true
+TW_INCLUDE_FUSE_EXFAT := true
+TW_BRIGHTNESS_PATH := "/sys/class/backlight/panel/brightness"
+TW_MAX_BRIGHTNESS := 2047
+TW_DEFAULT_BRIGHTNESS := 1200
+TW_NO_RGB_LED := true
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone0/temp"
+TW_DEVICE_VERSION := OrangeFox-beyond0lte-Unofficial
+TW_EXTRA_LIBRARIES := libexynosutils
+TW_QCOM_HDMI_OUT := false
+TW_HAS_MTP_STORAGE := true
+TW_MTP_DEVICE := "/dev/usb-ffs/mtp"
+TW_NO_REBOOT_BOOTLOADER := true
+TW_NO_FLASH_ALL := true
+TW_NO_SCREEN_TIMEOUT := true
+TW_INCLUDE_REPACKTOOLS := true
+TW_FORCE_CPU_TEMP := true
